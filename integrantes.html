@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="stylesheet" href="style.css" />
+        <title>DNOO37 | EVALUACIÓN Nº2</title>
+    </head>
+    <body>
+        <nav>
+            <h1><a href="index.html">ISABEL MENESES</a></h1>
+            <select onchange="location = this.value;">
+                <option value="index.html">INDEX</option>
+                <option value="integrantes.html" selected>INTEGRANTES</option>
+                <option value="openweather.html">OPEN WEATHER</option>
+                <option value="picture.html">PICTURE OF THE DAY</option>
+                <option value="sismico.html">SÍSMICO</option>
+            </select>
+        </nav>
+        <header style="display: none;">
+            <div>Marque uno:</div>
+            <div><input type="radio" name="selecciona" value="todos" checked />Todos</div>
+            <div><input type="radio" name="selecciona" value="Sagitario" />Sagitario</div>
+            <div><input type="radio" name="selecciona" value="Leo" />Leo</div>
+            <div><input type="radio" name="selecciona" value="Aries" />Aries</div>
+        </header>
+        <aside></aside>
+        <main></main>
+        <script>
+            const alternativas = document.querySelector("header");
+            const detalles = document.querySelector("aside");
+            const respuesta = document.querySelector("main");
+            var datos;
+            async function estudiantes() {
+                const data = await fetch("https://raw.githubusercontent.com/profesorfaco/dno037-2023-2/main/clase-07/_curso.json");
+                datos = await data.json();
+                alternativas.removeAttribute("style");
+                console.log(datos);
+                signos = [];
+                datos.forEach((x) => {
+                    if(x.github !== ""){
+                        respuesta.innerHTML += `<article><div><img src="${x.avatar}"></div><div><p><a href="integrante.html?lista=${x.lista}">${x.nombres.split(" ")[0]} ${x.apellidos.split(" ")[0]}</a></p><p>${
+                            x.zodiaco.signo
+                        }</p></div></article>`;
+                        signos.push(x.zodiaco.signo);
+                    }
+                });
+
+
+    const counts = {};
+    signos.forEach((x) => {
+      counts[x] = (counts[x] || 0) + 1;
+    });
+    console.log(counts)
+
+
+
+            }
+            estudiantes().catch((error) => console.error(error));
+
+            function compatibilidad(valor) {
+                respuesta.innerHTML = ``;
+                detalles.innerHTML = ``;
+
+                //Lo que sigue lo saqué de https://www.clara.es/
+
+                if (valor == "sagitario") {
+                    about =
+                        "No hay nada ni nadie que pueda coartar ese sentido de la independencia que es intrínseco de los nativos del noveno signo del zodiaco. Basta remitirse a su pictograma para entender que nadie los puede detener: una flecha lanzada por un arquero, que se encumbra por los aires como una metáfora de esa sabiduría que se aleja rauda y libre de los problemas y de lo terrenal, apuntando a ideales más altos.";
+                } else if (valor == "leo") {
+                    about =
+                        "Se caracterizan por ser autónomas, resueltas, ambiciosas y con mucha seguridad en sí mismas. Les gusta correr riesgos y saben perfectamente a dónde quieren llegar y cómo quieren hacerlo. Cuidado con el mal genio y la arrogancia, esa excesiva creencia en sí mismos y aires de seguridad les puede terminar jugando en contra";
+                } else if (valor == "aries") {
+                    about =
+                        "Son personas llenas de energía y pasionales, dispuestos a encarar todos los proyectos que tengan por delante con mucha determinación. Les gusta estar a cargo, liderar, dar instrucciones más que recibirlas pero que, sin embargo, se comprometen a fuego con los que necesitan de su ayuda.";
+                } else {
+                    about = "Diseño y nuevos medios."
+                }
+
+                detalles.innerHTML += `<div><p>${about}</p></div>`;
+
+                datos.forEach((x) => {
+                    if (valor == x.zodiaco.signo) {
+                        respuesta.innerHTML += `<article><div><img src="${x.avatar}"></div><div><p><a href="integrante.html?lista=${x.lista}">${x.nombres.split(" ")[0]} ${x.apellidos.split(" ")[0]}</a></p><p>${
+                            x.zodiaco.signo
+                        }</p></div></article>`;
+                    }
+                });
+            }
+
+            const seleccionado = document.querySelectorAll('input[name="selecciona"]');
+
+            seleccionado.forEach((i) => {
+                i.addEventListener("change", function () {
+                    var valor = this.value;
+                    if (valor !== "todos"){
+                        console.log(valor);
+                        compatibilidad(valor);
+                    } else {
+                        window.location.reload();
+                    }
+                });
+            });
+        </script>
+    </body>
+</html>
